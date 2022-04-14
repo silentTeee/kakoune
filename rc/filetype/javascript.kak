@@ -149,7 +149,7 @@ define-command -hidden javascript-indent-on-new-line %<
         # Validate selection and get first and last char
         execute-keys <a-k>\A[{(](\h*\S+)+\n<ret> <a-K>"(([^"]*"){2})*<ret> <a-K>'(([^']*'){2})*<ret> <a-:><a-semicolon>L <a-S>
         # Remove possibly incorrect indent from new line which was copied from previous line
-        try %< execute-keys -draft <space> <a-h> s\h+<ret> d >
+        try %< execute-keys -draft , <a-h> s\h+<ret> d >
         # Now indent and align that new line with the opening parenthesis/brace
         execute-keys 1<a-&> &
      > >
@@ -158,7 +158,7 @@ define-command -hidden javascript-indent-on-new-line %<
         # # filter previous line
         # try %{ execute-keys -draft k : javascript-trim-indent <ret> }
         # # indent after lines beginning / ending with opener token
-        # try %_ execute-keys -draft k x s [[({] <ret> <space> <a-l> <a-K> [\])}] <ret> j <a-gt> _
+        # try %_ execute-keys -draft k x s [[({] <ret> , <a-l> <a-K> [\])}] <ret> j <a-gt> _
         # # deindent closing token(s) when after cursor
         # try %_ execute-keys -draft x <a-k> ^\h*[})\]] <ret> gh / [})\]] <ret> m <a-S> 1<a-&> _
     >
