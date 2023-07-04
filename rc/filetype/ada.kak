@@ -23,6 +23,40 @@ add-highlighter shared/ada/code default-region group
 # NOTE: see http://ada-auth.org/standards/rm12_w_tc1/html/RM-P.html for syntax
 # summary
 evaluate-commands %sh{
+
+    # Numbers literals (https://www.adaic.org/resources/add_content/standards/05rm/html/RM-2-4-1.html)
+    numeral='\d+(?:_\d+)*'
+    exponent="[eE][+-]?${numeral}"
+    decimal_literal="${numeral}(?:\.${numeral})?(?:${exponent})?"
+
+    base="${numeral}"
+    based_numeral='[0-9a-fA-F]+(?:_[0-9a-fA-F]+)*'
+    based_literal="${base}#${based_numeral}(?:\.${based_numeral})?#(?:${exponent})?"
+
+    # Character literals
+    char_literal="'.'"
+
+    # Declarations
+
+    # This might seem like a lot of effort to highlight routines correctly but 
+    # it is worth it
+    id='[_a-zA-Z]\w{,126}' # identifier for variables
+    enum_literal="(?:${id})|(?:${char_literal})"
+    enum_type_def="\(\s*${enum_literal}(?:\s*,\s*${enum_literal})*\s*\)"
+    signed_int_type_def="range\s+"
+    int_type_def="(?:${signed_int_type_def})|(?:${mod_type_def})"
+    type_def="(?:${enum_type_def})"
+    type_def="${type_def}|(?:${int_type_def})"
+    type_def="${type_def}|(?:${real_type_def})"
+    type_def="${type_def}|(?:${array_type_def})"
+    type_def="${type_def}|(?:${record_type_def})"
+    type_def="${type_def}|(?:${access_type_def})"
+    type_def="${type_def}|(?:${derived_type_def})"
+    type_def="${type_def}|(?:${iface_type_def})"
+
+    
+    full_type_declaration="type (${id})\s+(${known_discriminant_part})?\s+is\s+(${type_def})\s+(${aspect_def})?;"
+    
     
 
     # This might seem like a lot of effort to highlight routines correctly but 
@@ -118,14 +152,6 @@ EOF
 EOF
 
 
-    # numbers (https://www.adaic.org/resources/add_content/standards/05rm/html/RM-2-4-1.html)
-    numeral='\d+(?:_\d+)*'
-    exponent="[eE][+-]?${numeral}"
-    decimal_literal="${numeral}(?:\.${numeral})?(?:${exponent})?"
-
-    base="${numeral}"
-    based_numeral='[0-9a-fA-F]+(?:_[0-9a-fA-F]+)*'
-    based_literal="${base}#${based_numeral}(?:\.${based_numeral})?#(?:${exponent})?"
 
     for r in code routine/parameters/default routine/default; do
         cat <<EOF
